@@ -1,8 +1,9 @@
 # Scaffolding para Arquitectura Hexagonal en Go (Golang)  
 
-![Go Logo](https://golang.org/lib/godoc/images/go-logo-blue.svg)  
+<img src="https://github.com/golang-samples/gopher-vector/blob/master/gopher.svg" alt="Go Logo" width="80">
 
 Este proyecto es un **scaffolding** diseñado para facilitar la creación de aplicaciones en Go utilizando la **Arquitectura Hexagonal**. Proporciona una base sólida y modular para desarrollar aplicaciones escalables, mantenibles y adaptables a diferentes infraestructuras tecnológicas.  
+
 
 ## Características Principales  
 - **Estructura Modular**: Separación clara en capas (`domain`, `infrastructure`, `application`, `presentation`) para fomentar el desacoplamiento y facilitar las pruebas.  
@@ -20,3 +21,26 @@ Este proyecto es un **scaffolding** diseñado para facilitar la creación de apl
 ├── infrastructure    # Implementaciones técnicas (DB, APIs externas)
 ├── presentation      # Rutas, controladores y transporte HTTP
 └── main.go           # Punto de entrada de la aplicación
+```
+
+## Desarrollo
+Para trabajar en modo desarrollo
+
+```bash
+  air
+```
+
+## Compilacion
+Para generar un binario compilado
+
+```bash
+  go env GOARCH ## validar la arquitectura
+
+  GOOS=<sistema_operativo> GOARCH=<arquitectura> go build  ## Comando general
+  
+  ## Gener compilado para las diferentes arquitecturas 
+
+  GOOS=windows GOARCH=amd64 go build -o myapp.exe
+  GOOS=linux GOARCH=amd64 go build -o myapp
+  GOOS=darwin GOARCH=amd64 go build -o myapp
+```
