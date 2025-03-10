@@ -1,12 +1,14 @@
 package boostrap
 
 import (
+	"fmt"
 	"genesis/pos/presentation/middleware"
+
 	"genesis/pos/presentation/routers"
 	"github.com/gin-gonic/gin"
 	cors "github.com/itsjamie/gin-cors"
-	"log"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -33,12 +35,32 @@ func loadEngine() *gin.Engine {
 	return engine
 }
 func RunServer() {
+	port := os.Getenv("PORT")
 	engine := loadEngine()
-	engine.Use(gin.Logger())
-	err := engine.Run(os.Getenv("SERVER_PORT"))
-	// err := engine.Run(constants.HOST_PORT)
-	if err != nil {
-		log.Println("ERROR AL INICIAR EL SERVIDOR")
-		panic("ERROR AL INICIAR EL SERVIDOR:" + err.Error())
+
+	production, _ := getBool("PRODUCTION")
+	if production {
+		certFile := os.Getenv("CERTFILE")
+		keyFile := os.Getenv("KEYFILE")
+		err := engine.RunTLS(port, certFile, keyFile)
+		if err != nil {
+			fmt.Println("ERROR AL INICIAR EL SERVIDOR")
+			panic("ERROR AL INICIAR EL SERVIDOR:" + err.Error())
+		}
+	} else {
+		err := engine.Run(port)
+		if err != nil {
+			fmt.Println("ERROR AL INICIAR EL SERVIDOR")
+			panic("ERROR AL INICIAR EL SERVIDOR:" + err.Error())
+		}
+		fmt.Println("Servidor ejecutándose en modo desarrollo en", port)
 	}
+}
+
+func getBool(key string) (bool, error) {
+	value, err := strconv.ParseBool(os.Getenv(key))
+	if err != nil {
+		return false, fmt.Errorf("error convirtiendo %s a booleano: %v", key, err)
+	}
+	return value, nil
 }

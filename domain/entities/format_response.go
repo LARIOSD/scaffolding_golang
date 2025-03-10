@@ -7,6 +7,7 @@ type ResponseHttp struct {
 }
 
 type ResponseJson struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
+	Status  int         `json:"status"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data,omitempty"`
 }
