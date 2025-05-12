@@ -35,13 +35,13 @@ func loadEngine() *gin.Engine {
 	return engine
 }
 func RunServer() {
-	port := os.Getenv("PORT")
+	port := os.Getenv("SERVER_PORT")
 	engine := loadEngine()
 
 	production, _ := getBool("PRODUCTION")
 	if production {
-		certFile := os.Getenv("CERTFILE")
-		keyFile := os.Getenv("KEYFILE")
+		certFile := os.Getenv("CERT_FILE")
+		keyFile := os.Getenv("KEY_FILE")
 		err := engine.RunTLS(port, certFile, keyFile)
 		if err != nil {
 			fmt.Println("ERROR AL INICIAR EL SERVIDOR")
