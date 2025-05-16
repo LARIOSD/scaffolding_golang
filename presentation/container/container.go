@@ -108,6 +108,19 @@ func ResolveGetSaleRepository() infrastructure.GetSalesRepository {
 	}
 }
 
+var BasicAuthRepository infrastructure.BasicAuthRepositoryPort
+
+func ResolveBasicAuthRepository() infrastructure.BasicAuthRepositoryPort {
+	if BasicAuthRepository != nil {
+		return BasicAuthRepository
+	}
+
+	BasicAuthRepository = &repositories_impl.BasicAuthRepositoryImpl{
+		DB: DatabaseConnectionToLecWithPgx,
+	}
+	return BasicAuthRepository
+}
+
 var GetSaleUseCase use_case.GetSalesUseCase
 
 func ResolveGetSaleUseCase() use_case.GetSalesUseCase {
@@ -132,6 +145,19 @@ func ResolveGetCurrentTimeService() service_application2.GetCurrentTimeService {
 	}
 }
 
+var GetCredentialsUseCase use_case.GetCredentialsUseCasePort
+
+func ResolveGetCredentialsUseCase() use_case.GetCredentialsUseCasePort {
+	if GetCredentialsUseCase != nil {
+		return GetCredentialsUseCase
+	}
+
+	GetCredentialsUseCase = &use_case2.GetCredentialsUseCaseImpl{
+		Get: BasicAuthRepository,
+	}
+	return GetCredentialsUseCase
+}
+
 func StartContainer() {
 	DatabaseConnectionToMongo = ResolveDatabaseConnectionToMongo()
 	DatabaseConnectionToLecWithPgx = ResolveDatabaseConnectionToLecWithPgx()
@@ -151,10 +177,12 @@ func StartContainer() {
 	//Repositories
 	GetCurrentTimeRepository = ResolveGetCurrentTimeRepository()
 	GetSaleRepository = ResolveGetSaleRepository()
+	BasicAuthRepository = ResolveBasicAuthRepository()
 
 	//Uses cases
 	GetCurrentTimeUseCase = ResolveGetCurrentTimeUseCase()
 	GetSaleUseCase = ResolveGetSaleUseCase()
+	GetCredentialsUseCase = ResolveGetCredentialsUseCase()
 
 	//Services
 	GetCurrentTimeService = ResolveGetCurrentTimeService()
